@@ -53,7 +53,7 @@ def display_report(df, metrics):
         return
     
     # Columnas a excluir
-    columnas_excluir = ['O', 'P', 'Q', 'R', 'Y', 'Z', 'AA', 'AB', 'AO', 'AP']
+    columnas_excluir = ['M', 'N', 'O', 'P', 'Q', 'R', 'Y', 'Z', 'AA', 'AB', 'AO', 'AP']
     
     # Columnas de porcentaje
     columnas_porcentaje = ['AL', 'AT', 'AU']
@@ -73,17 +73,38 @@ def display_report(df, metrics):
     if not metrics or len(metrics) <= 1:  # Only record_count
         st.info("No hay datos numéricos disponibles para el cálculo de métricas.")
     else:
-        # Create columns for the metrics
-        numeric_metrics = {k: v for k, v in metrics.items() if k != 'record_count'}
-        metric_cols = st.columns(min(len(numeric_metrics), 3))
+        # Pares de columnas para métricas
+        metricas_pares = [
+            ('E', 'F'),
+            ('G', 'H'),
+            ('I', 'J'),
+            ('K', 'L'),
+            ('S', 'T'),
+            ('U', 'V'),
+            ('W', 'X'),
+            ('AC', 'AD')
+        ]
         
-        for i, (col_name, values) in enumerate(numeric_metrics.items()):
-            with metric_cols[i % len(metric_cols)]:
-                st.metric(
-                    label=f"{col_name}",
-                    value=f"{values['mean']:.2f}",
-                    delta=f"Max: {values['max']:.2f}"
-                )
+        # Iterar sobre cada par de métricas
+        for col1, col2 in metricas_pares:
+            if col1 in metrics and col2 in metrics:
+                cols = st.columns(2)
+                
+                # Primera columna
+                with cols[0]:
+                    st.metric(
+                        label=f"Columna {col1}",
+                        value=f"{metrics[col1]['mean']:.2f}",
+                        delta=f"Max: {metrics[col1]['max']:.2f}"
+                    )
+                
+                # Segunda columna
+                with cols[1]:
+                    st.metric(
+                        label=f"Columna {col2}",
+                        value=f"{metrics[col2]['mean']:.2f}",
+                        delta=f"Max: {metrics[col2]['max']:.2f}"
+                    )
     
     # Display record count
     st.info(f"Total de registros: {metrics.get('record_count', 0)}")
