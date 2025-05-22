@@ -67,43 +67,41 @@ def display_report(df, metrics):
             df_display[col] = df_display[col].astype(float) / 100
             df_display[col] = df_display[col].map('{:.2%}'.format)
     
-    # Display key metrics in a multi-column layout
+    # Display key metrics in a two-column layout
     st.subheader("Métricas Clave")
     
     if not metrics or len(metrics) <= 1:  # Only record_count
         st.info("No hay datos numéricos disponibles para el cálculo de métricas.")
     else:
-        # Pares de columnas para métricas
-        metricas_pares = [
-            ('E', 'F'),
-            ('G', 'H'),
-            ('I', 'J'),
-            ('K', 'L'),
-            ('S', 'T'),
-            ('U', 'V'),
-            ('W', 'X'),
-            ('AC', 'AD')
-        ]
+        # Definir pares de métricas relacionadas
+        pares_metricas = {
+            'MSD Bateas': ('E', 'F'),
+            'M&Q Aljibes': ('G', 'H'),
+            'Coseducam Bateas': ('I', 'J'),
+            'Coseducam Aljibes': ('K', 'L'),
+            'Nazar Bateas': ('S', 'T'),
+            'Nazar Aljibes': ('U', 'V'),
+            'Jorquera Aljibes': ('W', 'X'),
+            'Ramplas MSD': ('AC', 'AD')
+        }
         
-        # Iterar sobre cada par de métricas
-        for col1, col2 in metricas_pares:
-            if col1 in metrics and col2 in metrics:
-                cols = st.columns(2)
+        # Mostrar cada par de métricas
+        for nombre, (col_prog, col_real) in pares_metricas.items():
+            if col_prog in metrics and col_real in metrics:
+                col1, col2 = st.columns(2)
                 
-                # Primera columna
-                with cols[0]:
+                with col1:
                     st.metric(
-                        label=f"Columna {col1}",
-                        value=f"{metrics[col1]['mean']:.2f}",
-                        delta=f"Max: {metrics[col1]['max']:.2f}"
+                        label=f"{nombre} Prog.",
+                        value=f"{metrics[col_prog]['mean']:.2f}",
+                        delta=f"Max: {metrics[col_prog]['max']:.2f}"
                     )
                 
-                # Segunda columna
-                with cols[1]:
+                with col2:
                     st.metric(
-                        label=f"Columna {col2}",
-                        value=f"{metrics[col2]['mean']:.2f}",
-                        delta=f"Max: {metrics[col2]['max']:.2f}"
+                        label=f"{nombre} Real",
+                        value=f"{metrics[col_real]['mean']:.2f}",
+                        delta=f"Max: {metrics[col_real]['max']:.2f}"
                     )
     
     # Display record count
