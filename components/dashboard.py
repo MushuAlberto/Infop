@@ -11,7 +11,7 @@ def render_dashboard(df):
     Args:
         df: The pandas DataFrame containing the filtered data
     """
-    if df.empty:
+    if df is None or df.empty:
         st.warning("No hay datos disponibles para visualizar en el dashboard.")
         return
     
@@ -24,16 +24,22 @@ def render_dashboard(df):
     # Add filters for up to 3 categorical columns
     filter_values = {}
     for i, col in enumerate(categorical_cols[:3]):
-        if len(df[col].unique()) < 50:  # Only add filter if not too many unique values
-            unique_values = sorted(df[col].unique().tolist())
-            selected_values = st.sidebar.multiselect(
-                f"Filtrar por {col}",
-                options=unique_values,
-                default=unique_values
-            )
-            
-            if selected_values:
-                filter_values[col] = selected_values
+        try:
+            if col in df.columns:  # Check if column exists
+                if len(df[col].dropna().unique()) < 50:  # Only add filter if not too many unique values
+                    unique_values = sorted(df[col].dropna().unique().tolist())
+                    if unique_values:  # Check if we have any values after dropping NA
+                        selected_values = st.sidebar.multiselect(
+                            f"Filtrar por {col}",
+                            options=unique_values,
+                            default=unique_values
+                        )
+                        
+                        if selected_values:
+                            filter_values[col] = selected_values
+        except Exception as e:
+            st.warning(f"Error al procesar columna {col}: {str(e)}")
+            continue
     
     # Apply filters if any
     filtered_df = df.copy()
