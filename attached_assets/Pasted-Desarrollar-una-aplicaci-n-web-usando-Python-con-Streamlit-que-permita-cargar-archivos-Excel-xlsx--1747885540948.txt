@@ -1,0 +1,92 @@
+Desarrollar una aplicación web usando Python con Streamlit que permita cargar archivos Excel (.xlsx y .xlsm) con datos operacionales. Desde la hoja llamada “Base de Datos”, la app debe generar informes basados en una fecha seleccionada por el usuario desde un calendario. Luego, debe crear dashboards interactivos, realizar un análisis automático con inteligencia artificial, y permitir guardar los informes para poder consultarlos después solo seleccionando la fecha.
+
+⸻
+
+🔧 Requisitos técnicos
+	•	Lenguaje: Python 3.10 o superior
+	•	Framework: Streamlit
+	•	Procesamiento de Excel: pandas, openpyxl, xlrd
+	•	Visualización: plotly, altair, matplotlib, seaborn
+	•	Exportación: xlsxwriter para Excel y pdfkit o weasyprint para PDF
+	•	Persistencia: Guardado local de informes (como .json, .pkl, .xlsx o .csv) en carpetas por fecha
+	•	IA/NLP: Motor de análisis automático (reglas básicas o integración con OpenAI)
+
+⸻
+
+✅ Funcionalidades requeridas
+
+1. Carga de archivos Excel
+	•	El usuario sube archivos .xlsx o .xlsm.
+	•	Validar que exista la hoja “Base de Datos”.
+	•	Leer datos preservando fechas, fórmulas y tipos.
+
+2. Selección de fecha
+	•	Usar un calendario (st.date_input) para seleccionar una fecha o rango.
+	•	Filtrar automáticamente los datos según esa fecha.
+
+3. Generación de informe
+	•	Generar métricas clave (totales, promedios, máximos, etc.).
+	•	Comparaciones con periodos anteriores si están disponibles.
+	•	Mostrar en st.dataframe con opción de exportar a Excel o PDF.
+
+4. Dashboard visual interactivo
+	•	Filtros desplegables en tiempo real (por proceso, zona, turno, equipo, etc.).
+	•	Visualizaciones comparativas entre fechas seleccionadas.
+	•	Posibilidad de “anclar” métricas clave para tenerlas siempre visibles.
+	•	Gráficos interactivos construidos con plotly, altair o similar.
+
+5. Análisis automático con IA
+	•	Generar un resumen en lenguaje natural con observaciones clave:
+	•	Tendencias
+	•	Anomalías
+	•	Variaciones importantes
+	•	Ejemplo de salida:
+“La producción disminuyó un 12% respecto a la semana pasada, especialmente en el turno noche del área norte.”
+
+6. Guardado de informes
+	•	Botón “Guardar informe” que:
+	•	Almacena el informe generado, el análisis IA y las visualizaciones en una carpeta estructurada por fecha (/informes/AAAA-MM-DD/)
+	•	Guarda en formato .pkl, .xlsx, .json, o equivalente.
+
+7. Consulta de informes guardados
+	•	Mostrar calendario o lista de fechas con informes guardados.
+	•	Al seleccionar una, mostrar automáticamente el informe, dashboard y análisis que corresponden a esa fecha.
+
+⸻
+
+📊 Dashboards más dinámicos
+	•	Filtros desplegables en tiempo real: por proceso, zona, turno, equipo, etc.
+	•	Visualizaciones comparativas entre fechas: comparar producción o métricas clave entre dos rangos seleccionados.
+	•	Anclar métricas clave: el usuario puede marcar variables importantes para que se muestren permanentemente (como KPIs).
+
+⸻
+
+🧩 Modularidad del código (estructura recomendada)
+
+Separar responsabilidades del sistema en módulos distintos para mejorar mantenibilidad y escalabilidad:
+
+📁 app/
+├── app.py                        # Lógica principal y flujo de Streamlit
+├── 📁 components/
+│   ├── file_uploader.py         # Carga de archivos Excel
+│   ├── report_generator.py      # Lógica del informe
+│   ├── dashboard.py             # Visualizaciones
+│   ├── ai_analysis.py           # Análisis automatizado con IA
+│   ├── data_filter.py           # Filtro por fecha y otros campos
+│   ├── report_storage.py        # Guardado y carga de informes
+├── 📁 data/
+│   ├── raw/                     # Archivos Excel originales
+│   ├── processed/               # Informes generados por fecha
+├── 📁 assets/                   # Logo, estilos o imágenes si se usan
+
+Esta estructura evita tener todo en un solo app.py y facilita agregar nuevas funcionalidades a futuro sin romper lo existente.
+
+⸻
+
+🧭 Flujo de usuario
+	1.	Usuario carga un archivo Excel.
+	2.	Selecciona una fecha desde el calendario.
+	3.	La app filtra y genera el informe + dashboard.
+	4.	La IA analiza y comenta los resultados.
+	5.	El usuario guarda el informe.
+	6.	En otra sesión, selecciona la fecha deseada y recupera todo sin volver a cargar archivos
