@@ -58,8 +58,9 @@ def display_report(df, metrics):
     # Columnas de porcentaje
     columnas_porcentaje = ['AL', 'AT', 'AU']
     
-    # Filtrar las columnas
+    # Filtrar las columnas del DataFrame y las métricas
     df_display = df.drop(columns=columnas_excluir, errors='ignore')
+    metrics = {k: v for k, v in metrics.items() if k not in columnas_excluir}
     
     # Convertir columnas de porcentaje a formato decimal y luego a porcentaje
     for col in columnas_porcentaje:
@@ -73,7 +74,7 @@ def display_report(df, metrics):
     if not metrics or len(metrics) <= 1:  # Only record_count
         st.info("No hay datos numéricos disponibles para el cálculo de métricas.")
     else:
-        # Definir pares de métricas relacionadas
+        # Definir pares de métricas relacionadas (solo las que queremos mostrar)
         pares_metricas = {
             'MSD Bateas': ('E', 'F'),
             'M&Q Aljibes': ('G', 'H'),
